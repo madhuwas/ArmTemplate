@@ -1,0 +1,137 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnetName": {
+      "type": "string",
+      "defaultValue": "VNet1",
+      "metadata": {
+        "description": "Name of the Virtual Network"
+      }
+    },
+    "vnetAddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16",
+      "metadata": {
+        "description": "VNET Address prefix"
+      }
+    },
+    "subnetSpaPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/28",
+      "metadata": {
+        "description": "Subnet SPA Prefix"
+      }
+    },
+    "subnetSpaName": {
+      "type": "string",
+      "defaultValue": "GatewaySubnet",
+      "metadata": {
+        "description": "Subnet SPA Name"
+      }
+    },
+    "subnetCapimPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.1.0/28",
+      "metadata": {
+        "description": "Subnet Capim Prefix"
+      }
+    },
+    "subnetCapimName": {
+      "type": "string",
+      "defaultValue": "SecurityTrust",
+      "metadata": {
+        "description": "Subnet Capim Name"
+      }
+    },
+    "subnetCappsPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.2.0/28",
+      "metadata": {
+        "description": "Subnet Capps Prefix"
+      }
+    },
+    "subnetCappsName": {
+      "type": "string",
+      "defaultValue": "SecurityUntrust",
+      "metadata": {
+        "description": "Subnet Capps Name"
+      }
+    },
+    "subnetMgmtPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.3.0/28",
+      "metadata": {
+        "description": "Subnet Mgmt Prefix"
+      }
+    },
+    "subnetMgmtName": {
+      "type": "string",
+      "defaultValue": "SecurityMGMT",
+      "metadata": {
+        "description": "Subnet Mgmt Name"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the environment"
+      }
+    },
+    "stream": {
+      "type": "string"
+    },
+    "expiry": {
+      "type": "string"    
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2017-06-01",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('vnetName')]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "stream": "[parameters('stream')]",
+        "expiry": "[parameters('expiry')]"
+      },
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('vnetAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[parameters('subnetSpaName')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetSpaPrefix')]"
+            }
+          },
+
+          {
+            "name": "[parameters('subnetCapimName')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetCapimPrefix')]"
+            }
+          },
+
+          {
+            "name": "[parameters('subnetCappsName')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetCappsPrefix')]"
+            }
+          },
+
+          {
+            "name": "[parameters('subnetMgmtName')]",
+            "properties": {
+              "addressPrefix": "[parameters('subnetMgmtPrefix')]"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

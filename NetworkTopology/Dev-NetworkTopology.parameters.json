@@ -1,0 +1,45 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnetName": {
+      "value": "aae-dta-vnet01"
+    },
+    "vnetAddressPrefix": {
+      "value": "10.110.128.0/18"
+    },
+    "subnetSpaName": {
+      "value": "aae-dta-vnet01-spa"
+    },
+    "subnetSpaPrefix": {
+      "value": "10.110.189.0/24"
+    },
+    "subnetCapimName": {
+      "value": "aae-dta-vnet01-capim"
+    },
+    "subnetCapimPrefix": {
+      "value": "10.110.144.0/21"
+    },
+    "subnetCappsName": {
+      "value": "aae-dta-vnet01-capps"
+    },
+    "subnetCappsPrefix": {
+      "value": "10.110.128.0/20"
+    },
+    "subnetMgmtName": {
+      "value": "aae-dta-vnet01-mgmt"
+    },
+    "subnetMgmtPrefix": {
+      "value": "10.110.190.0/24"
+    },
+    "environment": {
+      "value": "dev"
+    },
+    "stream": {
+      "value": "devsecops"
+    },
+    "expiry": {
+      "value": "01/12/2019"
+    }
+  }
+}
