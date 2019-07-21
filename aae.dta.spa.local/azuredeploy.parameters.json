@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "storageAccountName": {
+      "value": "aaedtaspalocalstorage"
+    },
+    "accountType": {
+      "value": "Standard_RAGRS"
+    },
+    "kind": {
+      "value": "StorageV2"
+    },
+    "accessTier": {
+      "value": "Hot"
+    },
+    "supportsHttpsTrafficOnly": {
+      "value": true
+    },
+    "networkAclsBypass": {
+      "value": "AzureServices"
+    },
+    "networkAclsDefaultAction": {
+      "value": "Deny"
+    },
+    "subnetName": {
+      "value": "aae-dta-vnet01-spa"
+    },
+    "vnetName": {
+      "value": "aae-dta-vnet01"
+    },
+    "environment": {
+      "value": "dev"
+    },
+    "stream": {
+      "value": "devsecops"
+    },
+    "expiry": {
+      "value": "01/12/2019"
+    }
+  }
+}

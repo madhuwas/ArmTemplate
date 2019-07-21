@@ -1,0 +1,90 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Specifies the Azure location where the key vault should be created."
+      }
+    },
+    "storageAccountName": {
+      "type": "string"
+    },
+    "accountType": {
+      "type": "string"
+    },
+    "vnetName": {
+      "type": "string"
+    },
+    "subnetName": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "accessTier": {
+      "type": "string"
+    },
+    "supportsHttpsTrafficOnly": {
+      "type": "bool"
+    },
+    "networkAclsBypass": {
+      "type": "string"
+    },
+    "networkAclsDefaultAction": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the environment"
+      }
+    },
+    "stream": {
+      "type": "string"
+    },
+    "expiry": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "subnetId": [
+      "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+    ]
+  },
+  "resources": [
+    {
+      "name": "[parameters('storageAccountName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2018-07-01",
+      "location": "[parameters('location')]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "stream": "[parameters('stream')]",
+        "expiry": "[parameters('expiry')]"
+      },
+      "properties": {
+        "accessTier": "[parameters('accessTier')]",
+        "supportsHttpsTrafficOnly": "[parameters('supportsHttpsTrafficOnly')]",
+        "networkAcls": {
+          "bypass": "[parameters('networkAclsBypass')]",
+          "defaultAction": "[parameters('networkAclsDefaultAction')]",
+          "ipRules": [],
+          "virtualNetworkRules": [
+            {
+              "id": "[variables('subnetId')[0]]",
+              "action": "Allow"
+            }
+          ]
+        }
+      },
+      "dependsOn": [],
+      "sku": {
+        "name": "[parameters('accountType')]"
+      },
+      "kind": "[parameters('kind')]"
+    }
+  ]
+}
