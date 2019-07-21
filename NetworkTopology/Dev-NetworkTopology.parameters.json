@@ -40,6 +40,18 @@
     },
     "expiry": {
       "value": "01/12/2019"
+    },
+    "SpaNsgName": {
+      "value": "aae-dta-spa-nsg"
+    },
+    "CapimNsgName": {
+      "value": "aae-dta-capim-nsg"
+    },
+    "CappsNsgName": {
+      "value": "aae-dta-capps-nsg"
+    },
+    "MgmtNsgName": {
+      "value": "aae-dta-mgmt-nsg"
     }
   }
 }

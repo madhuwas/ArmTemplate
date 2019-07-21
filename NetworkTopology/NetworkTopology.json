@@ -11,56 +11,48 @@
     },
     "vnetAddressPrefix": {
       "type": "string",
-      "defaultValue": "10.0.0.0/16",
       "metadata": {
         "description": "VNET Address prefix"
       }
     },
     "subnetSpaPrefix": {
       "type": "string",
-      "defaultValue": "10.0.0.0/28",
       "metadata": {
         "description": "Subnet SPA Prefix"
       }
     },
     "subnetSpaName": {
       "type": "string",
-      "defaultValue": "GatewaySubnet",
       "metadata": {
         "description": "Subnet SPA Name"
       }
     },
     "subnetCapimPrefix": {
       "type": "string",
-      "defaultValue": "10.0.1.0/28",
       "metadata": {
         "description": "Subnet Capim Prefix"
       }
     },
     "subnetCapimName": {
       "type": "string",
-      "defaultValue": "SecurityTrust",
       "metadata": {
         "description": "Subnet Capim Name"
       }
     },
     "subnetCappsPrefix": {
       "type": "string",
-      "defaultValue": "10.0.2.0/28",
       "metadata": {
         "description": "Subnet Capps Prefix"
       }
     },
     "subnetCappsName": {
       "type": "string",
-      "defaultValue": "SecurityUntrust",
       "metadata": {
         "description": "Subnet Capps Name"
       }
     },
     "subnetMgmtPrefix": {
       "type": "string",
-      "defaultValue": "10.0.3.0/28",
       "metadata": {
         "description": "Subnet Mgmt Prefix"
       }
@@ -70,6 +62,30 @@
       "defaultValue": "SecurityMGMT",
       "metadata": {
         "description": "Subnet Mgmt Name"
+      }
+    },
+    "SpaNsgName": {
+      "type": "string",
+      "metadata": {
+        "description": "This is name of the networkSecurityGroup that will be assigned to aae-dta-vnet01-spa Subnet"
+      }
+    },
+    "CapimNsgName": {
+      "type": "string",
+      "metadata": {
+        "description": "This is name of the networkSecurityGroup that will be assigned to aae-dta-vnet01-capim Subnet"
+      }
+    },
+    "CappsNsgName": {
+      "type": "string",
+      "metadata": {
+        "description": "This is name of the networkSecurityGroup that will be assigned to aae-dta-vnet01-capps Subnet"
+      }
+    },
+    "MgmtNsgName": {
+      "type": "string",
+      "metadata": {
+        "description": "This is name of the networkSecurityGroup that will be assigned to aae-dta-vnet01-mgmt Subnet"
       }
     },
     "environment": {
@@ -82,10 +98,127 @@
       "type": "string"
     },
     "expiry": {
-      "type": "string"    
+      "type": "string"
     }
   },
   "resources": [
+    {
+      "apiVersion": "2017-06-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('SpaNsgName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "stream": "[parameters('stream')]",
+        "expiry": "[parameters('expiry')]"
+      },
+      "properties": {
+        "securityRules": [        
+          {
+             "name": "web_rule",
+            "properties": {
+              "description": "Allow WEB",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 101,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2017-06-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('CapimNsgName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "stream": "[parameters('stream')]",
+        "expiry": "[parameters('expiry')]"
+      },
+      "properties": {
+        "securityRules": [
+          {
+              "name": "rdp_rule",
+              "properties": {
+                "description": "Allow RDP",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 100,
+                "direction": "Inbound"
+              }
+            }
+          
+        ]
+      }
+    },
+    {
+      "apiVersion": "2017-06-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('CappsNsgName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "stream": "[parameters('stream')]",
+        "expiry": "[parameters('expiry')]"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "Allow_App",
+            "properties": {
+              "description": "Allow APP Subnet",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "1433",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2017-06-01",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('MgmtNsgName')]",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "environment": "[parameters('environment')]",
+        "stream": "[parameters('stream')]",
+        "expiry": "[parameters('expiry')]"
+      },
+      "properties": {
+        "securityRules": [
+          {
+            "name": "Allow_App",
+            "properties": {
+              "description": "Allow APP Subnet",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "1433",
+              "sourceAddressPrefix": "Internet",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    },
     {
       "apiVersion": "2017-06-01",
       "type": "Microsoft.Network/virtualNetworks",
@@ -96,6 +229,12 @@
         "expiry": "[parameters('expiry')]"
       },
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('SpaNsgName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('CapimNsgName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('CappsNsgName'))]",
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('MgmtNsgName'))]"
+      ],
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
@@ -106,28 +245,68 @@
           {
             "name": "[parameters('subnetSpaName')]",
             "properties": {
-              "addressPrefix": "[parameters('subnetSpaPrefix')]"
+              "addressPrefix": "[parameters('subnetSpaPrefix')]",
+              "privateEndpointNetworkPolicies": "Enabled",
+              "privateLinkServiceNetworkPolicies": "Enabled",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Storage"
+                }
+              ],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('SpaNsgName'))]"
+              }
             }
           },
 
           {
             "name": "[parameters('subnetCapimName')]",
             "properties": {
-              "addressPrefix": "[parameters('subnetCapimPrefix')]"
+              "addressPrefix": "[parameters('subnetCapimPrefix')]",
+              "privateEndpointNetworkPolicies": "Enabled",
+              "privateLinkServiceNetworkPolicies": "Enabled",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Storage"
+                }
+              ],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('CapimNsgName'))]"
+              }
             }
           },
 
           {
             "name": "[parameters('subnetCappsName')]",
             "properties": {
-              "addressPrefix": "[parameters('subnetCappsPrefix')]"
+              "addressPrefix": "[parameters('subnetCappsPrefix')]",
+              "privateEndpointNetworkPolicies": "Enabled",
+              "privateLinkServiceNetworkPolicies": "Enabled",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Storage"
+                }
+              ],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('CappsNsgName'))]"
+              }
             }
           },
 
           {
             "name": "[parameters('subnetMgmtName')]",
             "properties": {
-              "addressPrefix": "[parameters('subnetMgmtPrefix')]"
+              "addressPrefix": "[parameters('subnetMgmtPrefix')]",
+              "privateEndpointNetworkPolicies": "Enabled",
+              "privateLinkServiceNetworkPolicies": "Enabled",
+              "serviceEndpoints": [
+                {
+                  "service": "Microsoft.Storage"
+                }
+              ],
+              "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('MgmtNsgName'))]"
+              }
             }
           }
         ]
