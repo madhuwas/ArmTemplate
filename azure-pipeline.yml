@@ -1,0 +1,41 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:  
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
+
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+  inputs:
+    SourceFolder: NetworkTopology
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  
+
+
+- task: AzureResourceGroupDeployment@2
+  displayName: 'Azure Deployment:Create Or Update Resource Group action on POC'
+  inputs:
+    azureSubscription: 'Free Trial (62460c86-24b3-486b-a27d-0989ae9587f8)'
+    resourceGroupName: POC
+    location: 'Southeast Asia'
+    csmFile: '$(System.DefaultWorkingDirectory)/_POC-ARM-Deployment/drop/NetworkTopology.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/_POC-ARM-Deployment/drop/Dev-NetworkTopology.parameters.json'
+
